@@ -1,6 +1,14 @@
 @MeidaAPI_HostAddress = http://localhost:5210
 
-GET {{MeidaAPI_HostAddress}}/weatherforecast/
+GET {{MeidaAPI_HostAddress}}/economics/gemel/info
 Accept: application/json
 
 ###
+
+GET {{MeidaAPI_HostAddress}}/economics/gemel
+Accept: application/json
+
+###
+
+GET {{MeidaAPI_HostAddress}}/economics/gemel?offset=100&count=300
+Accept: application/json

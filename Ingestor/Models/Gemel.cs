@@ -1,4 +1,4 @@
-﻿namespace Ingestor.Datastores;
+﻿namespace Ingestor.Models;
 
 // Kupot Gemel 2024 Dataset - Resource ID: a30dcbea-a1d2-482c-ae29-8f781f5025fb
 public class Gemel

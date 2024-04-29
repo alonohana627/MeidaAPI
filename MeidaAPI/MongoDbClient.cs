@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace Ingestor;
+namespace MediaAPI;
 
 // Singleton for DB
 public class MongoDbClient
@@ -30,32 +30,21 @@ public class MongoDbClient
     {
         _client = new MongoClient(connectionString);
         _database = _client.GetDatabase(databaseName);
-        InitializeDatabase();
-    }
-
-    private void InitializeDatabase()
-    {
-        if (!_client.ListDatabaseNames().ToList().Contains(_database.DatabaseNamespace.DatabaseName))
-        {
-            _client.GetDatabase(_database.DatabaseNamespace.DatabaseName);
-        }
-
-        if (!_database.ListCollectionNames().ToList().Contains("gemel"))
-        {
-            _database.CreateCollection("gemel");
-        }
     }
 
     public IMongoCollection<T> GetCollection<T>(string collectionName)
     {
         return _database.GetCollection<T>(collectionName);
     }
-
-    public void InsertDocument<T>(string collectionName, T document)
+    
+    public async Task<List<T>> GetDocuments<T>(string collectionName, int limit = 0, int offset = 0)
     {
-        var collection = GetCollection<T>(collectionName);
-        var id = document?.GetType().GetProperty("_id")?.GetValue(document)?.ToString();
-        collection.ReplaceOne(Builders<T>.Filter.Eq("_id", id), document,
-            new ReplaceOptions { IsUpsert = true });
+        var documents = _database.GetCollection<T>(collectionName);
+        var docsAsTask = await documents.Find(new BsonDocument())
+            .Skip(offset)
+            .Limit(limit)
+            .ToListAsync();
+
+        return docsAsTask;
     }
 }
