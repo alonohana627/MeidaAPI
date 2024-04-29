@@ -1,0 +1,33 @@
+﻿version: '3.7'
+
+services:
+  meidaapi:
+    image: meidaapi
+    build:
+      context: .
+      dockerfile: MeidaAPI/Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+      - "8081:8081"
+      - "5210:5210"
+      - "41656:41656"
+
+  ingestor:
+    image: ingestor
+    build:
+      context: .
+      dockerfile: Ingestor/Dockerfile
+
+  mongodb_container:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data_container:/data/db
+
+volumes:
+  mongodb_data_container:
